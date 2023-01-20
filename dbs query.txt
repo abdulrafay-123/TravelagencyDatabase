@@ -1,0 +1,169 @@
+create table destination(
+Destinationid int Primary key,
+destinationname varchar(50),
+Openinghours time,
+Phonenumber varchar(20),
+City varchar(20),
+State  varchar(20),
+Country varchar(20),
+Destination_Rating INT CHECK (Destination_Rating BETWEEN 1 AND 5),
+);
+
+--alter table destination Alter column Openinghours time;
+
+
+create table AuthorizedMembers(
+Memberid int primary key,
+Member_Name varchar(50),
+username varchar(40) NOT NULL unique,
+emailaddress varchar(50),
+password varchar(50),
+member_Address varchar(50),
+memberranking int,
+date_of_birth DATETIME,
+number_of_followers int,
+number_of_people_followed int,
+member_status varchar(40),
+Destinationid int,
+FOREIGN KEY (DestinationID) REFERENCES Destination(DestinationID));
+
+alter table AuthorizedMembers Alter column Date_of_Birth Date;
+--ALTER TABLE AuthorizedMembers ADD member_sub_type varchar(40);
+
+create table destinationdescription(
+DescriptionID int primary key,
+memberid int,
+ModifiedDate DATETIME,
+Foreign key (memberid) references authorizedmembers(memberid)
+);
+
+create table Attractions(
+Attractionid int primary key,
+type_of_attraction varchar(50),
+Memberid int,
+Arrival_time DATETIME,
+Departure_time DATETIME,
+Destinationid int,
+Potential_Cost DECIMAL(7,2),
+foreign key(Memberid) References AuthorizedMembers(Memberid),
+FOREIGN KEY (DestinationID) REFERENCES Destination(DestinationID));
+
+
+create table sight( 
+Sight_Name varchar(40),
+ticketprice varchar(30),
+Weblink varchar(100),
+Attractionid int primary key,
+FOREIGN KEY (Attractionid) REFERENCES Attractions(Attractionid));
+
+create table restaurant( 
+Restaurant_Name varchar(40),
+Weblink varchar(40),
+Consumption_per_capita varchar(40),
+Restaurant_Rating INT CHECK (Restaurant_Rating BETWEEN 1 AND 5),
+Attractionid int primary key,
+FOREIGN KEY (Attractionid) REFERENCES Attractions(Attractionid));
+
+
+create table shopping( 
+shopping_mall varchar(30),
+weblink varchar(30),
+Attractionid int primary key,
+FOREIGN KEY (Attractionid) REFERENCES Attractions(Attractionid));
+
+
+create table BusinessPartner(
+BpID int,
+BusinessName varchar(50),
+BusinessType varchar(50),
+Attractionid int primary key,
+Contact_Person varchar(40),
+business_contact_number varchar(20),
+FOREIGN KEY (Attractionid) REFERENCES Attractions(Attractionid));
+
+create table Comments(
+Memberid int,
+Destinationid int,
+posted_date DATETIME,
+posted_time DATETIME,
+Content varchar(50),
+Rating INT CHECK (Rating BETWEEN 1 AND 5),
+LikeDislike VARCHAR(10) CHECK (LikeDislike IN('Like','Dislike')),
+reply_content varchar(50),
+foreign key(Memberid) References AuthorizedMembers(Memberid),
+FOREIGN KEY (DestinationID) REFERENCES Destination(DestinationID));
+
+
+create table images(
+Memberid int,
+Destinationid int,
+destinationname varchar(50),
+imageid int primary key,
+imagelink varchar(50),
+foreign key(Memberid) References AuthorizedMembers(Memberid),
+FOREIGN KEY (DestinationID) REFERENCES Destination(DestinationID));
+
+create table Edit(
+Memberid int,
+Descriptionid int,
+primary key(Memberid, Descriptionid),
+foreign key(Memberid) References AuthorizedMembers(Memberid),
+FOREIGN KEY (DescriptionID) REFERENCES destinationdescription(DescriptionID)
+);
+
+
+create table Trip_Plan(
+Planid int primary key,
+Memberid int,
+Destinationid int,
+plan_name varchar(50),
+purpose_of_visit varchar(50),
+Start_Date_Time DATETIME,
+End_Date_Time DATETIME,
+Duration varchar(20),
+foreign key(Memberid) References AuthorizedMembers(Memberid),
+FOREIGN KEY (DestinationID) REFERENCES Destination(DestinationID));
+
+create table preferred_members( 
+MemberID int,
+number_of_followers int,
+FOREIGN KEY (MemberID) REFERENCES AuthorizedMembers(MemberID),
+);
+
+create table Rates( 
+MemberID int,
+destinationID int,
+Planid int primary key,
+plan_rating INT CHECK (plan_rating BETWEEN 1 AND 5),
+FOREIGN KEY (MemberID) REFERENCES AuthorizedMembers(MemberID),
+FOREIGN KEY (DestinationID) REFERENCES Destination(DestinationID)
+);
+
+create table travels( 
+Memberid int,
+Destinationid int,
+primary key(Memberid, Destinationid),
+foreign key(Memberid) References AuthorizedMembers(Memberid),
+FOREIGN KEY (DestinationID) REFERENCES Destination(DestinationID));
+
+create table waysoftravel( 
+Destinationid int primary key,
+travel_route varchar(50));
+
+create table wish_Destination(
+Memberid int primary key,
+wishlist varchar(100),
+foreign key(Memberid) References AuthorizedMembers(Memberid));
+
+
+create table visited_Destination( 
+Memberid int primary key,
+visitedlist varchar(100),
+foreign key(Memberid) References AuthorizedMembers(Memberid));
+
+
+create table regular_members( 
+MemberID int,
+number_of_followers int,
+FOREIGN KEY (MemberID) REFERENCES AuthorizedMembers(MemberID),
+);
